@@ -36,7 +36,7 @@ In short,
 
 ## Parent Nodes without Content
 
-Flare projects allow for parent nodes in the TOC that have no content themselves, but that when expanded, contain child topics. `parse_toc.py` currently does not have a foolproof way of handling such nodes. For parent nodes with content, the it relies on the `Link` attribute in the `.fltoc` file. Contentless parent nodes do not have this attribute, so `parse_toc.py` relies on the `Title` attribute for these nodes, and writes the `.rst` files corresponding to these nodes directly under the "Contents" folder. However, for reasons I haven't had time to understand yet, some contentless nodes fail to be replicated correctly this way.
+Flare projects allow for parent nodes in the TOC that have no content themselves, but that when expanded, contain child topics. `parse_toc.py` currently does not have a foolproof way of handling such nodes. For parent nodes with content, it relies on the `Link` attribute in the `.fltoc` file. Contentless parent nodes do not have this attribute, so `parse_toc.py` relies on the `Title` attribute for these nodes, and writes the `.rst` files corresponding to these nodes directly under the "Contents" folder. However, for reasons I haven't had time to understand yet, some contentless nodes fail to be replicated correctly this way.
 
 At present, `parse_toc.py` also prints to the console the titles of contentless parent nodes, so that you can have a list of them, manually check which ones aren't converted by the script, and manually convert them yourselves. If you do not have any contentless parent nodes in your project (i.e. if all `TocEntry` elements in your `.fltoc` file have the `Link` attribute), there is no need for manual conversion.
 
@@ -52,7 +52,6 @@ The script also inserts the `toctree` directive at the end of the file. If you w
 2. Copy the `Contents` folder of your Flare project into your Sphinx project folder. Make sure to copy the `Contents` folder that is in the same folder as the `.flprj` file. Do not copy the `Contents` folder that is under the `Output` folder, as the latter will contain extra styling elements.
 3. Copy the desired Flare table of contents into your Sphinx project folder. This should be an `.fltoc` file within the `Project\TOCs` subfolder of your Flare project folder.
 4. In the Windows Powershell or command terminal, run `convert.bat`.
-4. If you had edited `extractPaths()` to customize your `toctree` directives, this would be a good point to open the generated `.rst` files to check that the directives are as you intended.
 5. In the Windows Powershell or command terminal, run the TOC parsing script by typing `python parse_toc.py yourFlareTOCFile`. Replace `yourFlareTOCFile` with the name of the `.fltoc` file that contains your TOC structure.
 6. You should now have an `index.rst` file that contains a `toctree` directive with the top-level topics in your TOC. Your `Contents` folder will now contain an RST file for each HTML file. RST files for topics with children will have the appropriate `toctree` directive at the end of each file.
 7. You can test the new TOC by running the `sphinx-quickstart` command in the Sphinx project folder, and following [the instructions](http://www.sphinx-doc.org/en/master/usage/quickstart.html) for setting up a quick test build.
