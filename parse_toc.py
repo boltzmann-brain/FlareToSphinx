@@ -3,8 +3,14 @@ import os
 import errno
 import sys
 
-#extract paths of child nodes in a parent node, and write to specified file.
+
 def extractPaths(filename, parent):
+"""
+Extracts paths of a node's children, and writes paths to the end of the .rst file corresponding to the parent.
+For nodes with content, the .rst file should already exist as an end product of the PanDoc conversion.
+For nodes with no content, the file has the name of the parent's 'Title' attribute.
+
+"""
 	if len(list(parent)): #only put toctree directive if topic has children
 		with open(filename, 'a') as index:
 			index.write('\n' + '.. toctree::' + '\n' + '   :titlesonly:' + '\n' + '   :caption: Children:'
@@ -19,8 +25,15 @@ def extractPaths(filename, parent):
 				tocEntry = tocEntry[:-4] #strip file extension
 			index.write('   ' + tocEntry + '\n')
 					
-#this function will apply to all of the top-level topics and their descendants. It won't be run on the root node.
 def extractSubMenus(ancestor):
+"""
+Sets the filename to be the "Link" attribute of the XML node (if that attribute exists); otherwise the filename is set to the "Title" attribute.
+
+When either one of those attributes is extracted, we run the extractPaths function to find the node's children.
+
+This function is run on all of the top-level topics and their descendants. It won't be run on the root node.
+
+"""
 
 	#get 'link' attribute of node
 	file = ancestor.get('Link')
@@ -58,9 +71,10 @@ def extractSubMenus(ancestor):
 #Get tree of nodes by reading from XML file. File name should be first argument in command.
 tree = ET.parse(sys.argv[1])
 
+#Get root of XML tree.
 root = tree.getroot() #in the .fltoc format the root node is <CatapultToc>.
 
-#extract top-level topics and put their relative parts in index file. In the .fltoc format, these should be the immediate children of root.
+#extract top-level topics and put their relative paths in index file. In the .fltoc format, these should be the immediate children of root.
 extractPaths('index.rst', root)
 
 #run recursive function on all top-level topics (the 'pioneers')
